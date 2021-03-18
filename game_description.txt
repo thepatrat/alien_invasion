@@ -1,5 +1,7 @@
 Game:
 
 Player controls a spaceship, that can fire bullets at incoming invaders.
+The spaceship is in the middle of the screen on the botton
 If the invaders reach the bottom of the screen it is game over.
-The aliens are generated and move faster over time.
+In the beginning of a level the alien fleet is generated and moves down.
+If all aliens are shot down, new, faster aliens are generated.
