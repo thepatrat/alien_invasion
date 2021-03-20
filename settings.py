@@ -11,3 +11,8 @@ class Settings:
         # laser settings
         self.laser_speed = 15
         self.laser_allowed = 3
+
+        # Alien settings
+        self.alien_speed = 1
+        self.fleet_direction = 1
+        self.fleet_drop_speed = 10
