@@ -8,5 +8,6 @@ class Settings:
         self.screen_height = 800
         self.ship_speed = 10
 
-        # laser time
-        self.laser_speed = 30
+        # laser settings
+        self.laser_speed = 15
+        self.laser_allowed = 3

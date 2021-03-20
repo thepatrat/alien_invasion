@@ -49,7 +49,7 @@ class AlienInvasion:
             # ship position accordingly
             self.ship.update()
             # updating the bullets
-            self.lasers.update()
+            self._update_lasers()
             # function that manages the screen
             self._update_screen()
             # Make the most recently drawn screen visible.
@@ -89,8 +89,19 @@ class AlienInvasion:
 
     def _fire_laser(self):
         """ Creates a new laser and adds it to the laser group """
-        new_laser = Laser(self)
-        self.lasers.add(new_laser)
+        if len(self.lasers) < self.settings.laser_allowed:
+            new_laser = Laser(self)
+            self.lasers.add(new_laser)
+
+    def _update_lasers(self):
+        """ Update position of lasers and get rid of
+        old lasers """
+        self.lasers.update()
+
+        # get rid of bullets that have dissapeared.
+        for laser in self.lasers.copy():
+            if laser.rect.bottom <= 0:
+                self.lasers.remove(laser)
 
     def _update_screen(self):
         """Update images on the screen,
