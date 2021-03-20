@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from laser import Laser
+from alien import Alien
 import os
 
 
@@ -40,6 +41,12 @@ class AlienInvasion:
         # create a laser group
         self.lasers = pygame.sprite.Group()
 
+        # create a alien group
+        self.aliens = pygame.sprite.Group()
+
+        # creates a fleet of alien
+        self._create_fleet()
+
     def run_game(self):
         """Starts the main game loop."""
         while True:
@@ -50,6 +57,8 @@ class AlienInvasion:
             self.ship.update()
             # updating the bullets
             self._update_lasers()
+            # update the aliens
+            self._update_aliens()
             # function that manages the screen
             self._update_screen()
             # Make the most recently drawn screen visible.
@@ -103,6 +112,56 @@ class AlienInvasion:
             if laser.rect.bottom <= 0:
                 self.lasers.remove(laser)
 
+    def _create_fleet(self):
+        """ Create the fleet of aliens."""
+        # Make an alien.
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+
+        # determines the number of aliens fitting in a row
+        available_space_x = (
+            self.settings.screen_width - (2 * alien_width))
+        number_aliens_x = available_space_x // (2 * alien_width)
+
+        # determines how many rows fit on the screen.
+        ship_height = self.ship.rect.height
+        available_space_y = (
+            self.settings.screen_height - (3 * alien_height - ship_height))
+        number_rows = available_space_y // (2 * alien_height)
+
+        # Create a full fleet
+        for row_number in range(number_rows):
+            for alien_number in range(number_aliens_x):
+                self._create_alien(alien_number, row_number)
+
+    def _create_alien(self, alien_number, row_number):
+        """ Create an alien and place it in the row """    
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.y = alien_height + 2 * alien_height * row_number
+        alien.rect.x = alien.x
+        alien.rect.y = alien.y
+        self.aliens.add(alien)
+
+    def _check_fleet_edges(self):
+        """ Respond to aliens reaching the edge """
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """ Drop the entire fleet and change the fleets direction"""
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+
+    def _update_aliens(self):
+        """ Update the positions of all aliens in the fleet. """
+        self._check_fleet_edges()
+        self.aliens.update()
+
     def _update_screen(self):
         """Update images on the screen,
         and flip to the new screen."""
@@ -117,6 +176,9 @@ class AlienInvasion:
         # update the laser position
         for laser in self.lasers.sprites():
             laser.blit_laser()
+
+        # update the aliens
+        self.aliens.draw(self.screen)
 
 
 if __name__ == '__main__':

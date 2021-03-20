@@ -17,7 +17,7 @@ class Ship:
         self.settings = ai_game.settings
 
         # Load the ship image and assign in to self.image
-        self.image = pygame.image.load('images/ship1.png')
+        self.image = pygame.image.load('images/Ship1.png')
         # assign this image to a rectangle using get_rect
         # and assigning it to self. rect
         self.rect = self.image.get_rect()
