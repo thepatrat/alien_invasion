@@ -16,8 +16,15 @@ class Ship:
         # from the Settings class, which we are calling
         self.settings = ai_game.settings
 
+        self.ship_images = (
+            pygame.image.load('images/Ship1.png'),
+            pygame.image.load('images/Ship2.png'),
+            pygame.image.load('images/Ship3.png')
+            )
+
         # Load the ship image and assign in to self.image
-        self.image = pygame.image.load('images/Ship1.png')
+        self.image = self.ship_images[0]
+
         # assign this image to a rectangle using get_rect
         # and assigning it to self. rect
         self.rect = self.image.get_rect()
@@ -53,3 +60,15 @@ class Ship:
     def blitme(self):
         """Draw the ship at its current location."""
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self):
+        """ Center the ship on the screen."""
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
+    
+    def update_ship_image(self, max_hp, hp):
+        """ Changes image of the ship depending on the ship hp"""
+        try:
+            self.image = self.ship_images[max_hp - hp]
+        except(IndexError):
+            pass
